@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  ci:
+    name: ci
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check no hardcoded secrets
+        run: |
+          if grep -rE "(password|secret|api_key|token)\s*=\s*['\"][^'\"]{8,}" \
+            --include="*.py" --include="*.js" --include="*.ts" \
+            --exclude-dir=node_modules --exclude-dir=.venv --exclude-dir=.git \
+            --exclude="*.example" --exclude="*.test.*" . 2>/dev/null; then
+            echo "Possible hardcoded secrets"; exit 1
+          fi
+      - name: Install
+        run: npm ci
+      - name: Lint
+        run: npm run lint --if-present
+      - name: Test
+        run: npm test --if-present
+      - name: Build
+        run: npm run build --if-present
