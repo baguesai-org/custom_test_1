@@ -1,0 +1,6 @@
+{
+  "type": "custom",
+  "install": "npm install",
+  "build": "",
+  "start": "npm start"
+}
