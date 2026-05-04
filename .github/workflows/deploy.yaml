@@ -1,0 +1,15 @@
+name: Deploy test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Deploy with baguesctl
+        run: |
+          sudo /usr/local/bin/baguesctl app:deploy custom_test_1 --env test
